@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O Segredo do X - Prof. Danilo</title>
+  <style>
+    :root {
+      --rust-bg: #f5f0eb;
+      --rust-card: #2c1810;
+      --rust-card-light: #3d2317;
+      --rust-border: #8b5a2b;
+      --rust-gold: #d4af37;
+      --rust-paper: #fdfbf7;
+      --rust-text-light: #f3e5ab;
+      --rust-green: #386641;
+      --rust-green-hover: #2a4d31;
+      --rust-red: #9e2a2b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+    }
+
+    body {
+      background-color: var(--rust-bg);
+      background-image: radial-gradient(#e0d7cd 1px, transparent 1px);
+      background-size: 16px 16px;
+      color: #2b2b2b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Container Principal Rústico */
+    .app-container {
+      background: var(--rust-card);
+      border: 4px solid var(--rust-border);
+      border-radius: 12px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+      width: 100%;
+      max-width: 1100px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Cabeçalho Proporcional */
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--rust-card-light);
+      padding: 16px 24px;
+      border-radius: 8px;
+      border: 2px solid var(--rust-border);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+    }
+
+    .logo-svg {
+      width: 90px;
+      height: 90px;
+      filter: drop-shadow(2px 3px 6px rgba(0,0,0,0.6));
+    }
+
+    .title-container {
+      text-align: center;
+      flex: 1;
+    }
+
+    .main-title {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: var(--rust-gold);
+      letter-spacing: 1px;
+      text-shadow: 1px 2px 4px rgba(0,0,0,0.6);
+      line-height: 1.1;
+    }
+
+    .sub-title {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--rust-text-light);
+      margin-top: 4px;
+      font-style: italic;
+      letter-spacing: 0.5px;
+    }
+
+    .header-spacer { width: 100px; }
+
+    @media (max-width: 650px) {
+      .header-bar {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+      .header-spacer { display: none; }
+      .main-title { font-size: 1.8rem; }
+      .sub-title { font-size: 1.1rem; }
+    }
+
+    /* Painel do Placar */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      background: var(--rust-card-light);
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--rust-border);
+      text-align: center;
+    }
+
+    .stat-card {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--rust-gold);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--rust-text-light);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Barra de Progresso */
+    .progress-container {
+      width: 100%;
+      background: #1a0f0a;
+      border-radius: 8px;
+      height: 12px;
+      overflow: hidden;
+      border: 1px solid var(--rust-border);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #d4af37, #386641);
+      transition: width 0.3s ease;
+    }
+
+    /* Layout de duas colunas */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    @media (max-width: 850px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Card do Exercício (Lousa) */
+    .question-card {
+      background: var(--rust-card-light);
+      border: 2px solid var(--rust-border);
+      border-radius: 8px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      color: var(--rust-text-light);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: var(--rust-text-light);
+    }
+
+    /* Moldura estilo Lousa Antiga */
+    .equation-display {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-align: center;
+      padding: 18px 0;
+      background: #1b2d24;
+      border-radius: 6px;
+      border: 3px solid #5c3d2e;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* Entrada e Botões */
+    .input-section {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    input[type="number"] {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 1.25rem;
+      border: 2px solid var(--rust-border);
+      border-radius: 6px;
+      text-align: center;
+      outline: none;
+      background: var(--rust-paper);
+      color: #2c1810;
+      font-weight: bold;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #ffffff;
+      background-color: var(--rust-green);
+      border: 1px solid var(--rust-border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover { background-color: var(--rust-green-hover); }
+
+    button.btn-secondary {
+      background-color: #5c3d2e;
+      color: var(--rust-gold);
+    }
+
+    button.btn-secondary:hover { background-color: #4a3125; }
+
+    button:disabled {
+      background-color: #555555;
+      border-color: #333333;
+      cursor: not-allowed;
+    }
+
+    .btn-next-step {
+      background-color: var(--rust-green);
+      margin-top: 10px;
+      width: 100%;
+      font-size: 1.1rem;
+      display: none;
+    }
+
+    /* Feedback e Caixas Explicativas */
+    .feedback {
+      font-weight: bold;
+      font-size: 1.1rem;
+      min-height: 28px;
+      text-align: center;
+    }
+
+    .feedback.success { color: #81c784; }
+    .feedback.error { color: #e57373; }
+
+    .info-box {
+      padding: 16px;
+      border-radius: 6px;
+      display: none;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .info-box.hint {
+      background: #3e2723;
+      border: 1px solid var(--rust-border);
+      color: var(--rust-text-light);
+    }
+
+    .info-box.solution {
+      background: #4a151b;
+      border: 1px solid var(--rust-red);
+      color: #f8d7da;
+    }
+
+    .info-box h4 {
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      color: var(--rust-gold);
+    }
+
+    /* Gráfico com Estilo Pergaminho Rústico */
+    .graph-card {
+      background: var(--rust-card-light);
+      border: 2px solid var(--rust-border);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--rust-text-light);
+    }
+
+    .graph-header {
+      font-weight: bold;
+      color: var(--rust-gold);
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .canvas-container {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 450px;
+      position: relative;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      background: var(--rust-paper);
+      border-radius: 6px;
+      border: 2px solid var(--rust-border);
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Cabeçalho com Brasão SVG Baseado na Imagem de Referência -->
+  <header class="header-bar">
+    <div class="logo-container">
+      <svg class="logo-svg" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Coroa Dourada Superior com Pontas e Bolas -->
+        <path d="M 50 45 L 65 15 L 82 35 L 100 5 L 118 35 L 135 15 L 150 45 Z" fill="#f59e0b" stroke="#b45309" stroke-width="3" />
+        <circle cx="65" cy="15" r="5" fill="#fef08a" stroke="#b45309" stroke-width="2" />
+        <circle cx="100" cy="5" r="6" fill="#fef08a" stroke="#b45309" stroke-width="2" />
+        <circle cx="135" cy="15" r="5" fill="#fef08a" stroke="#b45309" stroke-width="2" />
+        <circle cx="50" cy="45" r="4" fill="#fef08a" stroke="#b45309" stroke-width="1.5" />
+        <circle cx="150" cy="45" r="4" fill="#fef08a" stroke="#b45309" stroke-width="1.5" />
+        <circle cx="82" cy="35" r="4" fill="#fef08a" stroke="#b45309" stroke-width="1.5" />
+        <circle cx="118" cy="35" r="4" fill="#fef08a" stroke="#b45309" stroke-width="1.5" />
+
+        <!-- Base e Borda Circular Externa Azul com Gemas -->
+        <circle cx="100" cy="110" r="72" fill="#1e40af" stroke="#d97706" stroke-width="5" />
+        <circle cx="100" cy="110" r="60" fill="#f97316" stroke="#b45309" stroke-width="3" />
+
+        <!-- Gemas Diamante na Borda Azul -->
+        <polygon points="35,110 40,105 45,110 40,115" fill="#ef4444" stroke="#fef08a" stroke-width="1" />
+        <polygon points="165,110 160,105 155,110 160,115" fill="#ef4444" stroke="#fef08a" stroke-width="1" />
+        <polygon points="50,70 55,65 60,70 55,75" fill="#ef4444" stroke="#fef08a" stroke-width="1" />
+        <polygon points="150,70 145,65 140,70 145,75" fill="#ef4444" stroke="#fef08a" stroke-width="1" />
+
+        <!-- Livro Aberto no Centro -->
+        <path d="M 52 145 Q 100 155 100 135 Q 100 155 148 145 L 148 118 Q 100 130 100 115 Q 100 130 52 118 Z" fill="#78350f" stroke="#451a03" stroke-width="2" />
+        <path d="M 55 140 Q 100 150 100 132 Q 100 150 145 140 L 145 118 Q 100 127 100 115 Q 100 127 55 118 Z" fill="#fef3c7" stroke="#b45309" stroke-width="1.5" />
+
+        <!-- Coruja de Capelo em Cima do Livro -->
+        <ellipse cx="100" cy="92" rx="22" ry="24" fill="#92400e" stroke="#451a03" stroke-width="2" />
+        <ellipse cx="100" cy="95" rx="15" ry="17" fill="#fef3c7" />
+        
+        <!-- Olhos e Bico -->
+        <circle cx="91" cy="86" r="8" fill="#fef08a" stroke="#451a03" stroke-width="1.5" />
+        <circle cx="109" cy="86" r="8" fill="#fef08a" stroke="#451a03" stroke-width="1.5" />
+        <circle cx="91" cy="86" r="4" fill="#000000" />
+        <circle cx="109" cy="86" r="4" fill="#000000" />
+        <polygon points="100,90 96,96 104,96" fill="#f59e0b" />
+
+        <!-- Chapéu Capelo -->
+        <polygon points="100,55 65,68 100,78 135,68" fill="#18181b" stroke="#000000" stroke-width="2" />
+        <rect x="91" y="68" width="18" height="10" fill="#27272a" rx="2" />
+        <path d="M 125 70 L 130 85 L 128 85" stroke="#f59e0b" stroke-width="2" fill="none" />
+        <circle cx="128" cy="87" r="2.5" fill="#f59e0b" />
+
+        <!-- Faixa em Pergaminho Inferior com Bordas Curvadas -->
+        <path d="M 35 155 Q 100 170 165 155 Q 175 180 160 190 Q 100 205 40 190 Q 25 180 35 155 Z" fill="#fef3c7" stroke="#b45309" stroke-width="3" />
+        <path d="M 20 165 Q 35 155 35 175 Q 35 195 20 185 Z" fill="#f59e0b" stroke="#b45309" stroke-width="2" />
+        <path d="M 180 165 Q 165 155 165 175 Q 165 195 180 185 Z" fill="#f59e0b" stroke="#b45309" stroke-width="2" />
+
+        <!-- Adorno Decorativo Inferior Central -->
+        <polygon points="100,200 90,225 100,235 110,225" fill="#f59e0b" stroke="#b45309" stroke-width="2" />
+      </svg>
+    </div>
+    <div class="title-container">
+      <h1 class="main-title">O Segredo do X</h1>
+      <span class="sub-title">Prof. Danilo</span>
+    </div>
+    <div class="header-spacer"></div>
+  </header>
+
+  <!-- Painel do Placar -->
+  <div class="dashboard">
+    <div class="stat-card">
+      <span class="stat-value" id="statAcertos" style="color: #81c784;">0</span>
+      <span class="stat-label">Acertos</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value" id="statErros" style="color: #e57373;">0</span>
+      <span class="stat-label">Erros</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value" id="statTentativas" style="color: var(--rust-gold);">3 / 3</span>
+      <span class="stat-label">Tentativas</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value" id="statProgresso">0%</span>
+      <span class="stat-label">Progresso</span>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Área Principal do Exercício -->
+  <div class="main-grid">
+    <div class="question-card">
+      <div class="card-header">
+        <span>Pergunta <span id="currentNumber">1</span> de 100</span>
+        <button class="btn-secondary" onclick="toggleHint()" id="btnHint">💡 Dica</button>
+      </div>
+
+      <div class="equation-display" id="equationDisplay">ax + b = c</div>
+
+      <!-- Dica Geral Sem Revelar Solução -->
+      <div class="info-box hint" id="hintBox">
+        <h4>💡 Como resolver qualquer equação do 1º grau:</h4>
+        <p>
+          1. <strong>Isole o termo com X:</strong> Mova o número que está somando ou subtraindo para o outro lado da igualdade, <em>invertendo a operação</em>.<br><br>
+          2. <strong>Encontre o valor de X:</strong> Divida o resultado pelo número que está multiplicando o <strong>x</strong>.<br><br>
+          3. <strong>Olho no gráfico:</strong> O valor de <strong>X</strong> que você busca é o ponto horizontal onde a reta atinge a altura do resultado da equação.
+        </p>
+      </div>
+
+      <!-- Entrada de Resposta -->
+      <div class="input-section" id="inputSection">
+        <input type="number" id="answerInput" placeholder="Valor de x" autofocus>
+        <button onclick="checkAnswer()" id="btnSubmit">Responder</button>
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <!-- Botão para avançar só após o término da questão -->
+      <button class="btn-next-step" id="btnNext" onclick="nextQuestion()">Próxima Pergunta ➔</button>
+
+      <!-- Solução Completa em Caso de 3 Erros -->
+      <div class="info-box solution" id="solutionBox">
+        <h4>⚠️ Resolução Passo a Passo:</h4>
+        <div id="solutionText"></div>
+      </div>
+    </div>
+
+    <!-- Gráfico Cartesiano estilo Pergaminho -->
+    <div class="graph-card">
+      <div class="graph-header">Representação Visual (Plano Cartesiano)</div>
+      <div class="canvas-container">
+        <canvas id="cartesianCanvas" width="450" height="450"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let database = [];
+  let currentIndex = 0;
+  let totalAcertos = 0;
+  let totalErros = 0;
+  let tentativasRestantes = 3;
+
+  const canvas = document.getElementById('cartesianCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function generate100Equations() {
+    const set = new Set();
+    const list = [];
+
+    while (list.length < 100) {
+      const a = (Math.floor(Math.random() * 5) + 1) * (Math.random() < 0.4 ? -1 : 1);
+      const x = Math.floor(Math.random() * 15) - 7;
+      const b = Math.floor(Math.random() * 16) - 8;
+      const c = a * x + b;
+
+      const bSign = b >= 0 ? `+ ${b}` : `- ${Math.abs(b)}`;
+      const eqText = `${a === 1 ? '' : a === -1 ? '-' : a}x ${b === 0 ? '' : bSign} = ${c}`;
+
+      if (!set.has(eqText)) {
+        set.add(eqText);
+        list.push({ equation: eqText, a: a, b: b, c: c, x: x });
+      }
+    }
+    return list;
+  }
+
+  function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function drawGraph(q, highlightSolution = false) {
+    if (!q) return;
+    const width = canvas.width;
+    const height = canvas.height;
+    const size = 15;
+    const scale = width / (2 * size);
+
+    ctx.clearRect(0, 0, width, height);
+
+    function toPx(x) { return width / 2 + x * scale; }
+    function toPy(y) { return height / 2 - y * scale; }
+
+    ctx.strokeStyle = '#e0d5c1';
+    ctx.lineWidth = 1;
+    for (let i = -size; i <= size; i++) {
+      ctx.beginPath();
+      ctx.moveTo(toPx(i), 0); ctx.lineTo(toPx(i), height);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, toPy(i)); ctx.lineTo(width, toPy(i));
+      ctx.stroke();
+    }
+
+    ctx.strokeStyle = '#5c3d2e';
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+    ctx.moveTo(0, height / 2); ctx.lineTo(width, height / 2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(width / 2, 0); ctx.lineTo(width / 2, height);
+    ctx.stroke();
+
+    ctx.fillStyle = '#8b5a2b';
+    ctx.font = '10px Georgia';
+    for (let i = -size; i <= size; i += 5) {
+      if (i !== 0) {
+        ctx.fillText(i, toPx(i) - 6, height / 2 + 14);
+        ctx.fillText(i, width / 2 + 6, toPy(i) + 4);
+      }
+    }
+
+    ctx.strokeStyle = '#c84b31';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    const x1 = -size;
+    const y1 = q.a * x1 + q.b;
+    const x2 = size;
+    const y2 = q.a * x2 + q.b;
+    ctx.moveTo(toPx(x1), toPy(y1));
+    ctx.lineTo(toPx(x2), toPy(y2));
+    ctx.stroke();
+
+    if (highlightSolution) {
+      const px = toPx(q.x);
+      const py = toPy(q.c);
+
+      ctx.setLineDash([5, 5]);
+      ctx.strokeStyle = '#386641';
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+      ctx.moveTo(px, height / 2);
+      ctx.lineTo(px, py);
+      ctx.lineTo(width / 2, py);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#386641';
+      ctx.beginPath();
+      ctx.arc(px, py, 7, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#1b3b22';
+      ctx.font = 'bold 12px Georgia';
+      ctx.fillText(`P(${q.x}, ${q.c})`, px + 10, py - 10);
+    }
+  }
+
+  function loadQuestion() {
+    if (currentIndex >= database.length) {
+      document.querySelector('.question-card').innerHTML = `
+        <h2 style="color: var(--rust-gold);">🎉 Parabéns! Você concluiu as 100 perguntas!</h2>
+        <p style="font-size: 1.1rem; margin-top: 10px; color: var(--rust-text-light);">
+          Placar final: <strong>${totalAcertos} acertos</strong> e <strong>${totalErros} erros</strong>.
+        </p>
+      `;
+      return;
+    }
+
+    tentativasRestantes = 3;
+    updateDashboard();
+
+    const q = database[currentIndex];
+    document.getElementById('equationDisplay').textContent = q.equation;
+    document.getElementById('currentNumber').textContent = currentIndex + 1;
+
+    const input = document.getElementById('answerInput');
+    input.value = '';
+    input.disabled = false;
+    document.getElementById('btnSubmit').disabled = false;
+    document.getElementById('inputSection').style.display = 'flex';
+    document.getElementById('btnNext').style.display = 'none';
+
+    document.getElementById('feedback').textContent = '';
+    document.getElementById('feedback').className = 'feedback';
+    document.getElementById('hintBox').style.display = 'none';
+    document.getElementById('solutionBox').style.display = 'none';
+
+    drawGraph(q, false);
+    input.focus();
+  }
+
+  function toggleHint() {
+    const hintBox = document.getElementById('hintBox');
+    hintBox.style.display = hintBox.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function checkAnswer() {
+    const input = document.getElementById('answerInput');
+    const feedback = document.getElementById('feedback');
+    const userAnswer = parseInt(input.value, 10);
+
+    if (isNaN(userAnswer)) {
+      feedback.textContent = 'Digite um número inteiro válido!';
+      feedback.className = 'feedback error';
+      return;
+    }
+
+    const q = database[currentIndex];
+
+    if (userAnswer === q.x) {
+      totalAcertos++;
+      feedback.textContent = '✨ Correto! O ponto foi confirmado no gráfico.';
+      feedback.className = 'feedback success';
+      
+      document.getElementById('answerInput').disabled = true;
+      document.getElementById('btnSubmit').disabled = true;
+      document.getElementById('btnNext').style.display = 'block';
+
+      drawGraph(q, true);
+
+    } else {
+      tentativasRestantes--;
+      totalErros++;
+
+      if (tentativasRestantes > 0) {
+        feedback.textContent = `Incorreto! Tentativas restantes: ${tentativasRestantes}.`;
+        feedback.className = 'feedback error';
+        updateDashboard();
+      } else {
+        feedback.textContent = 'Você esgotou as 3 tentativas para esta questão!';
+        feedback.className = 'feedback error';
+
+        document.getElementById('answerInput').disabled = true;
+        document.getElementById('btnSubmit').disabled = true;
+        document.getElementById('inputSection').style.display = 'none';
+        document.getElementById('btnNext').style.display = 'block';
+
+        drawGraph(q, true);
+        showSolution(q);
+        updateDashboard();
+      }
+    }
+  }
+
+  function showSolution(q) {
+    const solutionBox = document.getElementById('solutionBox');
+    const solutionText = document.getElementById('solutionText');
+
+    const bSignOpposite = q.b >= 0 ? `- ${q.b}` : `+ ${Math.abs(q.b)}`;
+    const step1Result = q.c - q.b;
+
+    solutionText.innerHTML = `
+      <p><strong>1. Equação original:</strong> ${q.equation}</p>
+      <p><strong>2. Passar termo independente trocando o sinal:</strong> ${q.a}x = ${q.c} ${bSignOpposite} ➔ ${q.a}x = ${step1Result}</p>
+      <p><strong>3. Dividir pelo coeficiente de x:</strong> x = ${step1Result} / (${q.a})</p>
+      <p><strong>4. Resposta Final:</strong> <span style="font-size: 1.15rem; color: #81c784;"><strong>x = ${q.x}</strong></span></p>
+    `;
+
+    solutionBox.style.display = 'block';
+  }
+
+  function nextQuestion() {
+    currentIndex++;
+    loadQuestion();
+  }
+
+  function updateDashboard() {
+    document.getElementById('statAcertos').textContent = totalAcertos;
+    document.getElementById('statErros').textContent = totalErros;
+    document.getElementById('statTentativas').textContent = `${tentativasRestantes} / 3`;
+
+    const progress = Math.round((currentIndex / database.length) * 100);
+    document.getElementById('statProgresso').textContent = `${progress}%`;
+    document.getElementById('progressBar').style.width = `${progress}%`;
+  }
+
+  document.getElementById('answerInput').addEventListener('keyup', function(e) {
+    if (e.key === 'Enter') checkAnswer();
+  });
+
+  window.onload = function() {
+    database = shuffle(generate100Equations());
+    loadQuestion();
+  };
+</script>
+
+</body>
+</html>
