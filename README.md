@@ -1,0 +1,1 @@
+# equacao-1grau
