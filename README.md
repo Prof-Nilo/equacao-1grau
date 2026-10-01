@@ -1,1 +1,1 @@
-# equacao-1grau
+# Equação 1º Grau
